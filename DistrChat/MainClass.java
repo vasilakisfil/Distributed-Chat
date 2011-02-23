@@ -1,10 +1,7 @@
 package DistrChat;
+
 import javax.swing.*;
 
-/**
- *
- * @author vasilakis
- */
 public class MainClass {
 
     /**

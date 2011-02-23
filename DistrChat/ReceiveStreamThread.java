@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package DistrChat;
 
 import java.io.IOException;
@@ -27,7 +22,7 @@ public class ReceiveStreamThread implements Runnable {
 	public void run() {
 		for( ; ; )
 		{
-			gui.appendDBText(gui.getMode() + " entered ReceiveStreamThread");
+			//gui.appendDBText(gui.getMode() + " entered ReceiveStreamThread");
 			if(gui.getMode().equals("server"))
 			{
 				try {

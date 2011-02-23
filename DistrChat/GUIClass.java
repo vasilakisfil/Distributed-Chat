@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -31,6 +34,8 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 	JTextArea dBtextArea,messageArea;
 	//declarations of important classes
 	ConnectionsClass connections;
+	DateFormat dateFormat;
+	Date date;
 	// set up GUI
 	public GUIClass()
 	{
@@ -146,9 +151,13 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		c4.ipady=20;
 		this.add(dbScroller,c4);
 
-		connections = new ConnectionsClass(this);
+		this.connections = new ConnectionsClass(this);
 		this.userInputField.setEditable(false);
 		this.messageArea.setEditable(false);
+
+		dateFormat = new SimpleDateFormat("HH:mm:ss");
+		date = new Date();
+		System.out.println(dateFormat.format(date));
 
 	} // end GridBagFrame constructor
 	public void enableInputAreas(boolean b)
@@ -156,15 +165,21 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		this.userInputField.setEditable(b);
 		this.messageArea.setEditable(b);
 		if(b==true)	this.messageArea.setBackground(Color.white);
-		else messageArea.setBackground(Color.gray);
+		else this.messageArea.setBackground(Color.gray);
+	}
+	public String getTime()
+	{
+		return "["+dateFormat.format(date)+"]";
 	}
 	public void appendMAText(String text)
 	{
-		messageArea.append(text.concat(System.getProperty("line.separator")));
+		this.messageArea.append(this.getTime() + text + System.getProperty("line.separator"));
+		this.messageArea.setCaretPosition(this.messageArea.getDocument().getLength());
 	}
 	public void appendDBText(String text)
 	{
-		dBtextArea.append(text.concat(System.getProperty("line.separator")));
+		this.dBtextArea.append(this.getTime() + text + System.getProperty("line.separator"));
+		this.dBtextArea.setCaretPosition(this.dBtextArea.getDocument().getLength());
 	}
 	private void setMode(String string)
 	{

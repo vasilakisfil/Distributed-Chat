@@ -1,15 +1,5 @@
 package DistrChat;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author vasilakis
- */
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,9 +41,9 @@ public class ConnectionsClass {
 		clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
 		clientIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (UnknownHostException e) {
-			return "Don't know about host: mmmm.";
+			return "Don't know about host:" + ip ;
 		} catch (IOException e) {
-			return "Couldn't get I/O for the connection to: mplampla.";
+			return "Couldn't get I/O for the connection to: " + ip;
 		}
 		
 		Thread receiveStream = new Thread(new ReceiveStreamThread(gui, this));
@@ -69,9 +59,9 @@ public class ConnectionsClass {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(15000);
-			gui.appendDBText("socket opened\n");
+			gui.appendDBText("socket opened");
         } catch (IOException e) {
-            gui.appendDBText("Could not listen on port: 4444");
+            gui.appendDBText("Could not listen on port:");
         }
 
 		Socket clientSocket = null;
@@ -91,23 +81,23 @@ public class ConnectionsClass {
 
 	public void clientSendString(String string)
 	{
-		gui.appendDBText("inside clientSendString function");
+		//gui.appendDBText("inside clientSendString function");
 		clientOut.println(string);
 	}
 
 	public String clientReadString() throws IOException
 	{
-		gui.appendDBText("inside clientReadString function");
+		//gui.appendDBText("inside clientReadString function");
 		return clientIn.readLine();
 	}
 	public void serverSendString(String string)
 	{
-		gui.appendDBText("inside serverSendString function");
+		//gui.appendDBText("inside serverSendString function");
 		serverOut.println(string);
 	}
 	public String serverReadString() throws IOException
 	{
-		gui.appendDBText("inside serverReadString function");
+		//gui.appendDBText("inside serverReadString function");
 		return serverIn.readLine();
 	}
 
