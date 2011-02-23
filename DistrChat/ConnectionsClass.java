@@ -65,6 +65,7 @@ public class ConnectionsClass {
             gui.appendDBText("Could not listen on port:");
         }
 
+		
         try {
             clientSocket = serverSocket.accept();
 			gui.appendDBText("Client connected");

@@ -29,7 +29,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 	private String mode="client";
 	private GridBagLayout layout; // layout of this frame
 	JButton enter,beServer;
-	JTextField  textFieldIP,userInputField;
+	JTextField  textFieldIP,textFieldName,userInputField;
 	//JFormattedTextField textFieldIP;
 	JLabel  label;
 	JTextArea dBtextArea,messageArea;
@@ -51,6 +51,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 
 		GridBagConstraints c1 = new GridBagConstraints();
 		GridBagConstraints c2 = new GridBagConstraints();
+		GridBagConstraints cName = new GridBagConstraints();
 		GridBagConstraints c3 = new GridBagConstraints();
 		GridBagConstraints c4 = new GridBagConstraints();
 		GridBagConstraints bS = new GridBagConstraints();
@@ -104,6 +105,15 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		this.add(beServer, bS);
 		beServer.addActionListener(this);
 
+		textFieldName = new JTextField("Nickname");
+		cName.fill = GridBagConstraints.NONE;
+		cName.anchor = GridBagConstraints.FIRST_LINE_START; //bottom of space
+		cName.insets = new Insets(10,0,0,100);  //top padding
+		cName.gridx = 4;
+		cName.gridy = 0;
+		cName.ipadx=50;
+		this.add(textFieldName, cName);
+
 		messageArea = new JTextArea(10,40);
 		messageArea.setLineWrap(true);
 		messageArea.setEditable(false);
@@ -112,7 +122,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		mA.fill = GridBagConstraints.BOTH;
 		mA.anchor = GridBagConstraints.CENTER;
 		mA.insets = new Insets(0,10,10,10);  //top padding
-		mA.gridwidth = 4;
+		mA.gridwidth = 5;
 		mA.weighty=0.1;
 		mA.gridx=0;
 		mA.gridy=1;
@@ -124,7 +134,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		uI.fill = GridBagConstraints.HORIZONTAL;
 		uI.anchor = GridBagConstraints.CENTER;
 		uI.insets = new Insets(0,10,10,10);  //top padding
-		uI.gridwidth = 4;
+		uI.gridwidth = 5;
 		//uI.weighty=0.01;
 		uI.gridx=0;
 		uI.gridy=2;
