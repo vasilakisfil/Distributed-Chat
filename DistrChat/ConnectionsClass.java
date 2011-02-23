@@ -36,8 +36,9 @@ public class ConnectionsClass {
 	public String clientConnect(String ip)
 	{
 		this.setIp(ip);
+		gui.appendDBText("connecting to " + ip);
 		try {
-		clientSocket = new Socket("127.0.0.1",15000);
+		clientSocket = new Socket(ip,15000);
 		clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
 		clientIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (UnknownHostException e) {
@@ -64,7 +65,7 @@ public class ConnectionsClass {
             gui.appendDBText("Could not listen on port:");
         }
 
-		Socket clientSocket = null;
+
         try {
             clientSocket = serverSocket.accept();
 			gui.appendDBText("Client connected");

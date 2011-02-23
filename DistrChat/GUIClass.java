@@ -29,7 +29,8 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 	private String mode="client";
 	private GridBagLayout layout; // layout of this frame
 	JButton enter,beServer;
-	JTextField textFieldIP,userInputField;
+	JTextField  textFieldIP,userInputField;
+	//JFormattedTextField textFieldIP;
 	JLabel  label;
 	JTextArea dBtextArea,messageArea;
 	//declarations of important classes
@@ -69,13 +70,17 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		c1.weighty = 0.01;
 		this.add(label, c1);
 
-		textFieldIP = new JTextField();
+
+		//MaskFormatter mf = null;
+		//mf = new MaskFormatter("###.###.###");
+		//textFieldIP = new JFormattedTextField(mf);
+		textFieldIP = new JTextField("127.0.0.1");
 		//c2.fill = GridBagConstraints.HORIZONTAL;
 		c2.anchor = GridBagConstraints.FIRST_LINE_START; //bottom of space
 		c2.insets = new Insets(10,0,0,0);  //top padding
 		c2.gridx = 1;
 		c2.gridy = 0;
-		c2.ipadx=150;
+		c2.ipadx=50;
 		this.add(textFieldIP, c2);
 		
 
@@ -157,7 +162,6 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 
 		dateFormat = new SimpleDateFormat("HH:mm:ss");
 		date = new Date();
-		System.out.println(dateFormat.format(date));
 
 	} // end GridBagFrame constructor
 	public void enableInputAreas(boolean b)
@@ -199,7 +203,6 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		//connecting to a server
         if(e.getActionCommand().equals("Enter"))
         {
-            this.appendDBText("connecting to "+"\n");
 			textFieldIP.setEditable(false);
 			this.appendDBText(connections.clientConnect(textFieldIP.getText()));
 			
