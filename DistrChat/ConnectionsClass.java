@@ -39,9 +39,13 @@ public class ConnectionsClass {
 
     }
 	
-
+	public void setIp(String ip)
+	{
+		this.ip=ip;
+	}
 	public String clientConnect(String ip)
 	{
+		this.setIp(ip);
 		try {
 		clientSocket = new Socket("127.0.0.1",15000);
 		clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -54,7 +58,7 @@ public class ConnectionsClass {
 		
 		Thread receiveStream = new Thread(new ReceiveStreamThread(gui, this));
 		receiveStream.start();
-
+		gui.enableInputAreas(true);
 		return "connected to ip: " + ip;
 	}
 
@@ -78,7 +82,7 @@ public class ConnectionsClass {
             gui.appendDBText("Accept failed");
         }
 
-
+		gui.enableInputAreas(true);
         serverOut = new PrintWriter(clientSocket.getOutputStream(), true);
         serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		Thread receiveStream = new Thread(new ReceiveStreamThread(gui, this));
@@ -94,7 +98,7 @@ public class ConnectionsClass {
 	public String clientReadString() throws IOException
 	{
 		gui.appendDBText("inside clientReadString function");
-		return clientIn.readLine().concat(System.getProperty("line.separator"));
+		return clientIn.readLine();
 	}
 	public void serverSendString(String string)
 	{

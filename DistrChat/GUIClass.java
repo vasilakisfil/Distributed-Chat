@@ -2,30 +2,22 @@ package DistrChat;
 
 
 // Demonstrating GridBagLayout.
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 public class GUIClass extends JFrame implements KeyListener, ActionListener
 {
@@ -105,6 +97,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		messageArea = new JTextArea(10,40);
 		messageArea.setLineWrap(true);
 		messageArea.setEditable(false);
+		messageArea.setBackground(Color.gray);
 		JScrollPane maScroller = new JScrollPane( messageArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 		mA.fill = GridBagConstraints.BOTH;
 		mA.anchor = GridBagConstraints.CENTER;
@@ -154,10 +147,17 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		this.add(dbScroller,c4);
 
 		connections = new ConnectionsClass(this);
-
+		this.userInputField.setEditable(false);
+		this.messageArea.setEditable(false);
 
 	} // end GridBagFrame constructor
-
+	public void enableInputAreas(boolean b)
+	{
+		this.userInputField.setEditable(b);
+		this.messageArea.setEditable(b);
+		if(b==true)	this.messageArea.setBackground(Color.white);
+		else messageArea.setBackground(Color.gray);
+	}
 	public void appendMAText(String text)
 	{
 		messageArea.append(text.concat(System.getProperty("line.separator")));
