@@ -26,7 +26,7 @@ public class ReceiveStreamThread implements Runnable {
 			if(gui.getMode().equals("server"))
 			{
 				try {
-					gui.appendMAText(connections.serverReadString());
+					gui.appendMAText(connections.serverReadString(),false);
 				} catch (IOException ex) {
 					Logger.getLogger(ReceiveStreamThread.class.getName()).log(Level.SEVERE, null, ex);
 				}
@@ -34,7 +34,7 @@ public class ReceiveStreamThread implements Runnable {
 			else if(gui.getMode().equals("client"))
 			{
 				try {
-					gui.appendMAText(connections.clientReadString());
+					gui.appendMAText(connections.clientReadString(),false);
 				} catch (IOException ex) {
 					Logger.getLogger(ReceiveStreamThread.class.getName()).log(Level.SEVERE, null, ex);
 				}

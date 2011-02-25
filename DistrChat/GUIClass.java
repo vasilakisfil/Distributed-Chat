@@ -11,9 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -28,8 +31,8 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 	private static final long serialVersionUID = 1L;
 	private String mode="client";
 	private GridBagLayout layout; // layout of this frame
-	JButton enter,beServer;
-	JTextField  textFieldIP,textFieldName,userInputField;
+	JButton enter,beServer,NameButt;
+	JTextField  textFieldIP,textFieldNickname,userInputField;
 	//JFormattedTextField textFieldIP;
 	JLabel  label;
 	JTextArea dBtextArea,messageArea;
@@ -52,6 +55,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		GridBagConstraints c1 = new GridBagConstraints();
 		GridBagConstraints c2 = new GridBagConstraints();
 		GridBagConstraints cName = new GridBagConstraints();
+		GridBagConstraints cNameButt = new GridBagConstraints();
 		GridBagConstraints c3 = new GridBagConstraints();
 		GridBagConstraints c4 = new GridBagConstraints();
 		GridBagConstraints bS = new GridBagConstraints();
@@ -99,20 +103,30 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		bS.fill = GridBagConstraints.NONE;
 		bS.anchor = GridBagConstraints.FIRST_LINE_START; //bottom of spac
 		bS.insets = new Insets(7,10,0,0);  //top padding
-		bS.weightx = 0.1;
 		bS.gridx = 3;
 		bS.gridy = 0;
 		this.add(beServer, bS);
 		beServer.addActionListener(this);
 
-		textFieldName = new JTextField("Nickname");
+		textFieldNickname = new JTextField("Nickname");
 		cName.fill = GridBagConstraints.NONE;
 		cName.anchor = GridBagConstraints.FIRST_LINE_START; //bottom of space
-		cName.insets = new Insets(10,0,0,100);  //top padding
+		cName.insets = new Insets(15,100,10,10);  //top padding
 		cName.gridx = 4;
 		cName.gridy = 0;
 		cName.ipadx=50;
-		this.add(textFieldName, cName);
+		this.add(textFieldNickname, cName);
+
+
+		NameButt = new JButton("Ok");
+		cNameButt.fill = GridBagConstraints.NONE;
+		cNameButt.anchor = GridBagConstraints.FIRST_LINE_START; //bottom of spac
+		cNameButt.insets = new Insets(7,10,0,0);  //top padding
+		cNameButt.weightx = 0.1;
+		cNameButt.gridx = 5;
+		cNameButt.gridy = 0;
+		this.add(NameButt, cNameButt);
+		NameButt.addActionListener(this);
 
 		messageArea = new JTextArea(10,40);
 		messageArea.setLineWrap(true);
@@ -122,7 +136,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		mA.fill = GridBagConstraints.BOTH;
 		mA.anchor = GridBagConstraints.CENTER;
 		mA.insets = new Insets(0,10,10,10);  //top padding
-		mA.gridwidth = 5;
+		mA.gridwidth = 6;
 		mA.weighty=0.1;
 		mA.gridx=0;
 		mA.gridy=1;
@@ -134,7 +148,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		uI.fill = GridBagConstraints.HORIZONTAL;
 		uI.anchor = GridBagConstraints.CENTER;
 		uI.insets = new Insets(0,10,10,10);  //top padding
-		uI.gridwidth = 5;
+		uI.gridwidth = 6;
 		//uI.weighty=0.01;
 		uI.gridx=0;
 		uI.gridy=2;
@@ -159,7 +173,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		c4.fill = GridBagConstraints.HORIZONTAL;
 		c4.anchor = GridBagConstraints.PAGE_END;
 		c4.insets = new Insets(0,10,10,10);  //top padding
-		c4.gridwidth = 4;
+		c4.gridwidth = 5;
 		c4.gridx=0;
 		c4.gridy=3;
 		c4.ipadx=40;
@@ -185,9 +199,10 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 	{
 		return "["+dateFormat.format(date)+"]";
 	}
-	public void appendMAText(String text)
+	public void appendMAText(String text, boolean mode)
 	{
-		this.messageArea.append(this.getTime() + text + System.getProperty("line.separator"));
+		if(mode==true)	this.messageArea.append(this.getTime() + connections.getRNickname() + text + System.getProperty("line.separator"));
+		else this.messageArea.append(this.getTime() + text + System.getProperty("line.separator"));
 		this.messageArea.setCaretPosition(this.messageArea.getDocument().getLength());
 	}
 	public void appendDBText(String text)
@@ -214,7 +229,12 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
         if(e.getActionCommand().equals("Enter"))
         {
 			textFieldIP.setEditable(false);
-			this.appendDBText(connections.clientConnect(textFieldIP.getText()));
+			try {
+				this.appendDBText(connections.clientConnect(textFieldIP.getText()));
+			}
+			catch (IOException ex) {
+				Logger.getLogger(GUIClass.class.getName()).log(Level.SEVERE, null, ex);
+			}
 			
         }
 		//waiting for a client
@@ -240,6 +260,11 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 			this.appendDBText("client mode");
 
 		}
+		else if(e.getActionCommand().equals("Ok"))
+		{
+			connections.setNickname(this.textFieldNickname.getText());
+			this.appendDBText("Nickname " + this.textFieldNickname.getText() + " was added!");
+		}
     }
 
     /** Handle the key typed event from the text field. */
@@ -252,7 +277,6 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 		if(KeyEvent.getKeyText(e.getKeyCode()).equals("Enter"))
 		{
 			String temp = userInputField.getText();
-			String eol = System.getProperty ("line.separator");
 			//temp=temp.concat(eol);
 			if(this.getMode().equals("server"))
 			{
@@ -262,7 +286,7 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 			{
 				connections.clientSendString(temp);
 			}
-			this.appendMAText(temp);
+			this.appendMAText(temp,true);
 			userInputField.setText("");
 		}
 	//displayInfo(e, "KEY PRESSED: ");
@@ -273,55 +297,5 @@ public class GUIClass extends JFrame implements KeyListener, ActionListener
 	//displayInfo(e, "KEY RELEASED: ");
     }
 
-    private void displayInfo(KeyEvent e, String keyStatus){
-
-        //You should only rely on the key char if the event
-        //is a key typed event.
-        int id = e.getID();
-        String keyString;
-        if (id == KeyEvent.KEY_TYPED) {
-            char c = e.getKeyChar();
-            keyString = "key character = '" + c + "'";
-        } else {
-            int keyCode = e.getKeyCode();
-            keyString = "key code = " + keyCode
-                    + " ("
-                    + KeyEvent.getKeyText(keyCode)
-                    + ")";
-        }
-
-        int modifiersEx = e.getModifiersEx();
-        String modString = "extended modifiers = " + modifiersEx;
-        String tmpString = KeyEvent.getModifiersExText(modifiersEx);
-        if (tmpString.length() > 0) {
-            modString += " (" + tmpString + ")";
-        } else {
-            modString += " (no extended modifiers)";
-        }
-
-        String actionString = "action key? ";
-        if (e.isActionKey()) {
-            actionString += "YES";
-        } else {
-            actionString += "NO";
-        }
-
-        String locationString = "key location: ";
-        int location = e.getKeyLocation();
-        if (location == KeyEvent.KEY_LOCATION_STANDARD) {
-            locationString += "standard";
-        } else if (location == KeyEvent.KEY_LOCATION_LEFT) {
-            locationString += "left";
-        } else if (location == KeyEvent.KEY_LOCATION_RIGHT) {
-            locationString += "right";
-        } else if (location == KeyEvent.KEY_LOCATION_NUMPAD) {
-            locationString += "numpad";
-        } else { // (location == KeyEvent.KEY_LOCATION_UNKNOWN)
-            locationString += "unknown";
-        }
-		System.out.printf("%s\n\n%s\n\n%s\n\n\n\n", keyString, actionString, locationString);
-
-
-    }
 
 } // end class GridBagFrame

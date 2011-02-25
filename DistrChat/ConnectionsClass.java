@@ -7,11 +7,14 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import org.teleal.cling.*;
+import org.teleal.cling.support.model.*;
+import org.teleal.cling.support.igd.PortMappingListener;
 
 
 public class ConnectionsClass {
 
-    private String ip;
+    private String ip,Nickname;
 	Socket clientSocket = null;
 	PrintWriter clientOut = null;
 	BufferedReader clientIn = null;
@@ -26,26 +29,42 @@ public class ConnectionsClass {
     public ConnectionsClass(GUIClass gui)
     {
 		this.gui=gui;
+		this.Nickname="";
 
     }
-	
+	public void setNickname(String Nickname)
+	{
+		this.Nickname=Nickname;
+	}
+	public String getNickname()
+	{
+		return this.Nickname;
+	}
+	public String getRNickname()
+	{
+		if(!this.Nickname.equals(""))
+		{
+			return "<"+this.Nickname+">";
+		}
+		else return "";
+	}
 	public void setIp(String ip)
 	{
 		this.ip=ip;
 	}
-	public String clientConnect(String ip)
+	public String clientConnect(String ip) throws IOException
 	{
 		this.setIp(ip);
 		gui.appendDBText("connecting to " + ip);
 		try {
-		clientSocket = new Socket(ip,15000);
-		clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
-		clientIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		clientSocket = new Socket(ip,35000);
 		} catch (UnknownHostException e) {
 			return "Don't know about host:" + ip ;
 		} catch (IOException e) {
 			return "Couldn't get I/O for the connection to: " + ip;
 		}
+		clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
+		clientIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		
 		Thread receiveStream = new Thread(new ReceiveStreamThread(gui, this));
 		receiveStream.start();
@@ -56,15 +75,19 @@ public class ConnectionsClass {
 	public void serverListen() throws IOException
 	{
 
+
 		gui.appendDBText("trying to open the socket");
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(15000);
+            serverSocket = new ServerSocket(35000);
 			gui.appendDBText("socket opened");
         } catch (IOException e) {
             gui.appendDBText("Could not listen on port:");
         }
 
+		PortMapping desiredMapping = new PortMapping(35000,"192.168.0.3",PortMapping.Protocol.TCP,"My Port Mapping");
+		UpnpService upnpService = new UpnpServiceImpl(new PortMappingListener(desiredMapping));
+		upnpService.getControlPoint().search();
 		
         try {
             clientSocket = serverSocket.accept();
@@ -83,7 +106,7 @@ public class ConnectionsClass {
 	public void clientSendString(String string)
 	{
 		//gui.appendDBText("inside clientSendString function");
-		clientOut.println(string);
+		clientOut.println(this.getRNickname()+string);
 	}
 
 	public String clientReadString() throws IOException
@@ -94,7 +117,7 @@ public class ConnectionsClass {
 	public void serverSendString(String string)
 	{
 		//gui.appendDBText("inside serverSendString function");
-		serverOut.println(string);
+		serverOut.println(this.getRNickname()+string);
 	}
 	public String serverReadString() throws IOException
 	{
